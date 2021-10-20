@@ -1,39 +1,43 @@
+import { Component, EventEmitter, Output } from "@angular/core";
+import { NgForm } from "@angular/forms";
+import { ClienteService } from "src/services/cliente.service";
+import { Cliente } from "src/models/cliente.model";
 
-import { Component, EventEmitter, Output } from '@angular/core';
-//remover
-import { Cliente } from '../cliente.model';
-import { NgForm } from '@angular/forms';
-import { ClienteService } from '../cliente.service';
+
 @Component({
     selector: 'app-cliente-inserir',
     templateUrl: './cliente-inserir.component.html',
-    styleUrls: ['./cliente-inserir.component.css'],
+    styleUrls: ['./cliente-inserir.component.css']
 })
+
 export class ClienteInserirComponent {
+
     constructor(public clienteService: ClienteService) { }
-    //remover
-    @Output() clienteAdicionado = new EventEmitter<Cliente>();
-    //remover
-    nome: string | undefined;
-    fone: string | undefined;
-    email: string | undefined;
-    onAdicionarCliente(form: NgForm) {
+
+    // @Output() clienteAdicionado = new EventEmitter<Cliente>();
+
+    // nome= '';
+    // fone= '';
+    // email= '';
+
+    adicionarCliente(form: NgForm) {
         if (form.invalid) {
             return;
         }
-        //remover
-        const cliente: Cliente = {
-            nome: form.value.nome,
-            fone: form.value.fone,
-            email: form.value.email,
-        };
+
         this.clienteService.adicionarCliente(
             form.value.nome,
             form.value.fone,
             form.value.email
         );
         form.resetForm();
-        //remover
-        this.clienteAdicionado.emit(cliente);
+
+        // const cliente: Cliente = {
+        //     nome: form.value.nome,
+        //     fone: form.value.fone,
+        //     email: form.value.email
+        // };
+
+        // this.clienteAdicionado.emit(cliente);
     }
 }
