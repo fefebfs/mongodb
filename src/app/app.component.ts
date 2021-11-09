@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Cliente } from '../models/cliente.model';
+import { Cliente } from './clientes/cliente.model';
 
 @Component({
   selector: 'app-root',
@@ -7,10 +7,12 @@ import { Cliente } from '../models/cliente.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'mongodb';
+  title(title: any) {
+    throw new Error('Method not implemented.');
+  }
   clientes: Cliente[] = [];
 
-  onClienteAdicionado(cliente: any) {
-    this.clientes = [...this.clientes, cliente];
+  onClienteAdicionado(cliente: Cliente) {
+  this.clientes.push(cliente);
   }
 }

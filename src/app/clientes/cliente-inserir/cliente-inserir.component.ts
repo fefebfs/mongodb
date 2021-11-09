@@ -1,43 +1,44 @@
-import { Component, EventEmitter, Output } from "@angular/core";
-import { NgForm } from "@angular/forms";
-import { ClienteService } from "src/services/cliente.service";
-import { Cliente } from "src/models/cliente.model";
-
-
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ClienteService } from '../cliente.service';
+import { Cliente } from '../cliente.model';
 @Component({
     selector: 'app-cliente-inserir',
     templateUrl: './cliente-inserir.component.html',
-    styleUrls: ['./cliente-inserir.component.css']
+    styleUrls: ['./cliente-inserir.component.css'],
 })
+export class ClienteInserirComponent implements OnInit {
 
-export class ClienteInserirComponent {
+    private modo: string = "criar";
+    private idCliente: string | null = null;
+    public cliente: Cliente | undefined;
 
-    constructor(public clienteService: ClienteService) { }
 
-    // @Output() clienteAdicionado = new EventEmitter<Cliente>();
+    ngOnInit() {
+        this.route.paramMap.subscribe((paramMap: ParamMap) => {
+            if (paramMap.has("idCliente")) {
+                this.modo = "editar";
+                this.idCliente = paramMap.get("idCliente");
+                this.cliente = this.clienteService.getCliente(this.idCliente!)as Cliente;
+            }
+            else {
+                this.modo = "criar";
+                this.idCliente = null;
+            }
+        });
+    }
+    constructor(public clienteService: ClienteService, public route: ActivatedRoute) { }
 
-    // nome= '';
-    // fone= '';
-    // email= '';
-
-    adicionarCliente(form: NgForm) {
+    onAdicionarCliente(form: NgForm) {
         if (form.invalid) {
             return;
         }
-
         this.clienteService.adicionarCliente(
             form.value.nome,
             form.value.fone,
             form.value.email
         );
         form.resetForm();
-
-        // const cliente: Cliente = {
-        //     nome: form.value.nome,
-        //     fone: form.value.fone,
-        //     email: form.value.email
-        // };
-
-        // this.clienteAdicionado.emit(cliente);
     }
 }
