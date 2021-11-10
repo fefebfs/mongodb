@@ -20,7 +20,14 @@ export class ClienteInserirComponent implements OnInit {
             if (paramMap.has("idCliente")) {
                 this.modo = "editar";
                 this.idCliente = paramMap.get("idCliente");
-                this.cliente = this.clienteService.getCliente(this.idCliente!)as Cliente;
+                this.clienteService.getCliente(this.idCliente!).subscribe(dadosCli => {
+                    this.cliente = {
+                        id: dadosCli._id,
+                        nome: dadosCli.nome,
+                        fone: dadosCli.fone,
+                        email: dadosCli.email
+                    };
+                });
             }
             else {
                 this.modo = "criar";
@@ -30,15 +37,25 @@ export class ClienteInserirComponent implements OnInit {
     }
     constructor(public clienteService: ClienteService, public route: ActivatedRoute) { }
 
-    onAdicionarCliente(form: NgForm) {
+    onSalvarCliente(form: NgForm) {
         if (form.invalid) {
             return;
         }
-        this.clienteService.adicionarCliente(
-            form.value.nome,
-            form.value.fone,
-            form.value.email
-        );
+        if (this.modo === "criar") {
+            this.clienteService.adicionarCliente(
+                form.value.nome,
+                form.value.fone,
+                form.value.email
+            );
+        }
+        else {
+            this.clienteService.atualizarCliente(
+                this.idCliente!,
+                form.value.nome,
+                form.value.fone,
+                form.value.email
+            )
+        }
         form.resetForm();
     }
 }
