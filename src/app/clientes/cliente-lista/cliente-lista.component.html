@@ -1,21 +1,29 @@
-<mat-accordion *ngIf="clientes.length > 0">
-  <mat-expansion-panel *ngFor="let flu of clientes">
+<mat-spinner *ngIf="estaCarregando"></mat-spinner>
+<mat-accordion *ngIf="clientes.length > 0 && !estaCarregando">
+  <mat-expansion-panel *ngFor="let cliente of clientes">
     <mat-expansion-panel-header
-      >Nome: {{ flu.nome }}
-    </mat-expansion-panel-header>
-    <p>Fone: {{ flu.fone }}</p>
+      >Nome: {{ cliente.nome }}</mat-expansion-panel-header
+    >
+    <div class="cliente-imagem">
+      <img [src]="cliente.imagemURL" [alt]="cliente.nome" />
+    </div>
+    <p>Fone: {{ cliente.fone }}</p>
     <hr />
-    <p>Email: {{ flu.email }}</p>
+    <p>Email: {{ cliente.email }}</p>
     <mat-action-row>
-      <a mat-button color="primary" [routerLink]="['/editar', flu.id]"
-        >EDITAR</a>
-      <button mat-button color="warn" (click)="onDelete(flu.id)">
+      <a mat-button color="primary" [routerLink]="['/editar', cliente.id]"
+        >EDITAR</a
+      >
+      <button mat-button color="warn" (click)="onDelete(cliente.id)">
         REMOVER
       </button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-
-<p class="mat-body-1" style="text-align: center" *ngIf="clientes.length <= 0">
+<p
+  class="mat-body-1"
+  style="text-align: center"
+  *ngIf="clientes.length <= 0 && !estaCarregando"
+>
   Nenhum cliente cadastrado
 </p>

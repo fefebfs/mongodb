@@ -1,4 +1,17 @@
 :host {
-    margin-top: 1rem;
-    display: block;
+  margin-top: 1rem;
+  display: block;
+}
+
+mat-spinner {
+  margin: auto;
+}
+
+.cliente-imagem {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.cliente-imagem > img {
+  max-width: 50%;
 }

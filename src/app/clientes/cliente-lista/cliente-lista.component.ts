@@ -1,4 +1,4 @@
-import { Component, OnInit , Input, OnDestroy} from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Cliente } from '../cliente.model';
 import { ClienteService } from '../cliente.service';
 import { Subscription, Observable } from 'rxjs';
@@ -8,27 +8,29 @@ import { Subscription, Observable } from 'rxjs';
   templateUrl: './cliente-lista.component.html',
   styleUrls: ['./cliente-lista.component.css']
 })
-export class ClienteListaComponent implements OnInit,  OnDestroy {
-
+export class ClienteListaComponent implements OnInit, OnDestroy {
   clientes: Cliente[] = [];
-  private clientesSubscription: Subscription = new Subscription;
-    
-  constructor(public clienteService: ClienteService) {}
+  private clientesSubscription: Subscription;
+  public estaCarregando = false;
 
-  onDelete (id: string): void{
+  constructor(public clienteService: ClienteService) { }
+
+  onDelete(id: string): void {
     this.clienteService.removerCliente(id);
-    }
+  }
 
   ngOnInit(): void {
+    this.estaCarregando = true;
     this.clienteService.getClientes();
     this.clientesSubscription = this.clienteService
-.getListaDeClientesAtualizadaObservable()
-.subscribe((clientes: Cliente[]) => {
-this.clientes = clientes;
-});
+      .getListaDeClientesAtualizadaObservable()
+      .subscribe((clientes: Cliente[]) => {
+        this.estaCarregando = false;
+        this.clientes = clientes;
+      });
   }
 
   ngOnDestroy(): void {
     this.clientesSubscription.unsubscribe();
-    }
+  }
 }
