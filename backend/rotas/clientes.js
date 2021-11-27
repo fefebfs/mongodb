@@ -58,15 +58,22 @@ router.post(
 );
 
 router.get("", (req, res, next) => {
-  debugger;
-  Cliente.find().then((documents) => {
-    console.log(documents);
+  //console.log (req.query);
+  const pageSize = +req.query.pagesize;
+  const page = +req.query.page;
+  const consulta = Cliente.find(); //só executa quando chamamos then
+  if (pageSize && page) {
+    consulta.skip(pageSize * (page - 1)).limit(pageSize);
+  }
+  consulta.then((documents) => {
+    //console.log(documents)
     res.status(200).json({
       mensagem: "Tudo OK",
       clientes: documents,
     });
   });
 });
+
 router.delete("/:id", (req, res, next) => {
   console.log("id: ", req.params.id);
   Cliente.deleteOne({ _id: req.params.id }).then((resultado) => {
@@ -74,19 +81,30 @@ router.delete("/:id", (req, res, next) => {
     res.status(200).json({ mensagem: "Cliente removido" });
   });
 });
-router.put("/:id", (req, res, next) => {
-  const cliente = new Cliente({
-    _id: req.params.id,
-    nome: req.body.nome,
-    fone: req.body.fone,
-
-    email: req.body.email,
-  });
-  Cliente.updateOne({ _id: req.params.id }, cliente).then((resultado) => {
-    console.log(resultado);
-    res.status(200).json({ mensagem: "Atualização realizada com sucesso" });
-  });
-});
+router.put(
+  "/:id",
+  multer({ storage: armazenamento }).single("imagem"),
+  (req, res, next) => {
+    console.log(req.file);
+    let imagemURL = req.body.imagemURL; //tentamos pegar a URL já existente
+    if (req.file) {
+      //mas se for um arquivo, montamos uma nova
+      const url = req.protocol + "://" + req.get("host");
+      imagemURL = url + "/imagens/" + req.file.filename;
+    }
+    const cliente = new Cliente({
+      _id: req.params.id,
+      nome: req.body.nome,
+      fone: req.body.fone,
+      email: req.body.email,
+      imagemURL: imagemURL,
+    });
+    Cliente.updateOne({ _id: req.params.id }, cliente).then((resultado) => {
+      //console.log(resultado)
+      res.status(200).json({ mensagem: "Atualização realizada com sucesso" });
+    });
+  }
+);
 router.get("/:id", (req, res, next) => {
   Cliente.findById(req.params.id).then((cli) => {
     if (cli) {

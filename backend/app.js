@@ -8,12 +8,13 @@ const clienteRoutes = require("./rotas/clientes");
 
 mongoose
   .connect(
-    "mongodb+srv://fefebfs:pkV6LeNJjOZLETeS@cluster0.t72pr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    "mongodb+srv://fefebfs1:fefebfs@cluster0.t72pr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("Conexão OK");
   })
   .catch(() => {
+    
     console.log("Conexão NOK");
   });
   
